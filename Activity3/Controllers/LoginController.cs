@@ -11,9 +11,18 @@ using System.Web.Script.Serialization;
 
 namespace Activity3.Controllers
 {
+    [CustomAction]
     public class LoginController : Controller
     {
         private static MyLogger1 logger = MyLogger1.GetInstance();
+
+        [HttpGet]
+        [CustomAuthorization]
+        public ActionResult PrivateSectionMustBeLoggedIn()
+        {
+            return Content("I am a protected method if the proper attribute is applied to me");
+        }
+
         [HttpGet]
         // GET: Login
         public ActionResult Index()

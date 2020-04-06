@@ -73,7 +73,7 @@ namespace HelloWorldService
             else
             {
                 List<UserModel> user = new List<UserModel>();
-                users.Add(users[index]);
+                user.Add(users[index]);
                 DTO dto = new DTO(0, "OK", user);
                 return dto;
             }
