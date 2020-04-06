@@ -4,6 +4,7 @@ using Activity3.Services.Utility;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.Caching;
 using System.Web;
 using System.Web.Mvc;
 using System.Web.Script.Serialization;
@@ -15,6 +16,32 @@ namespace Activity3.Controllers
     public class LoginController : Controller
     {
         private static MyLogger1 logger = MyLogger1.GetInstance();
+
+        [HttpGet]
+        public string GetUsers()
+        {
+            var cache = MemoryCache.Default;
+
+            List<UserModel> users = cache.Get("Users") as List<UserModel>;
+            if(users == null)
+            {
+                MyLogger1.GetInstance().Info("Brendan's App: Creating Users and putting them into a cache");
+
+                users = new List<UserModel>();
+                users.Add(new UserModel("Mark", "Test1"));
+                users.Add(new UserModel("Justine", "Test1"));
+                users.Add(new UserModel("Brianna", "Test1"));
+
+                var policy = new CacheItemPolicy().AbsoluteExpiration = DateTimeOffset.Now.AddSeconds(60.0);
+                cache.Set("Users", users, policy);
+            }
+
+            else
+            {
+                MyLogger1.GetInstance().Info("Brendan's App: Got users from cache");
+            }
+            return new JavaScriptSerializer().Serialize(users);
+        }
 
         [HttpGet]
         [CustomAuthorization]
